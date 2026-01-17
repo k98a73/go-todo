@@ -84,10 +84,10 @@ func (s *TodoService) CreateTodo(todo models.Todo) (models.Todo, error) {
 **例**:
 ```go
 func (r *TodoRepository) Save(todo models.Todo) (models.Todo, error) {
-    todos, _ := r.Load()
-    todos = append(todos, todo)
+    todoList, _ := r.Load()
+    todoList = append(todoList, todo)
     
-    data, _ := json.Marshal(todos)
+    data, _ := json.Marshal(todoList)
     os.WriteFile(r.filePath, data, 0644)
     
     return todo, nil

@@ -26,19 +26,33 @@ Go Todoアプリケーション開発の実装順序と各段階での学習ポ�
 
 **実施内容:**
 - Go のインストール
-- 適切なエディタ（VS Code + Go 拡張機能）の設定
-- プロジェクトディレクトリ作成
+- リポジトリの作成
+- リポジトリのクローン
+- プロジェクトディレクトリ初期化
 - `go.mod` ファイル生成
+- mainブランチの作成
 
 **学習ポイント:**
 - Go のパッケージシステムの理解
 - Module の基本
+- Jujutsu（jj）によるバージョン管理
 
 **実装コマンド:**
 ```bash
-mkdir go-todo
-cd go-todo
+# リポジトリ作成（初回のみ）
+gh repo create k98a73/go-todo --public
+
+# リポジトリクローン
+ghq get https://github.com/k98a73/go-todo
+
+# リポジトリに移動
+cd $(ghq root)/github.com/k98a73/go-todo
+
+# Go プロジェクト初期化
 go mod init github.com/k98a73/go-todo
+
+# mainブランチの作成
+jj bookmark create main -r luotxono
 ```
 
 ### 1.2 Go 言語の基礎学習
@@ -172,7 +186,7 @@ func (u *CreateTodoUsecase) Execute(ctx context.Context, title string) (*domain.
 ### 3.2 List ユースケース
 
 **実施内容:**
-- `internal/usecase/list_todos.go`
+- `internal/usecase/list_todo.go`
 - リポジトリから全 TODO を取得
 
 **学習ポイント:**
@@ -262,7 +276,7 @@ func TestCreateTodoUsecase(t *testing.T) {
 
 ```go
 func TestFileRepositoryPersistence(t *testing.T) {
-    tmpfile, _ := ioutil.TempFile("", "todos")
+    tmpfile, _ := ioutil.TempFile("", "todo")
     defer os.Remove(tmpfile.Name())
     
     repo := NewFileRepository(tmpfile.Name())
@@ -286,11 +300,11 @@ func TestFileRepositoryPersistence(t *testing.T) {
 - 各メソッドでエンドポイント処理
 
 **エンドポイント:**
-- `POST /todos` → Create
-- `GET /todos` → List
-- `GET /todos/:id` → FindByID
-- `PUT /todos/:id` → Update
-- `DELETE /todos/:id` → Delete
+- `POST /todo` → Create
+- `GET /todo/list` → List
+- `GET /todo/:id` → FindByID
+- `PUT /todo/:id` → Update
+- `DELETE /todo/:id` → Delete
 
 **期待される実装:**
 ```go
@@ -321,8 +335,8 @@ func main() {
     mux := http.NewServeMux()
     
     handler := newTodoHandler()
-    mux.HandleFunc("POST /todos", handler.CreateTodo)
-    mux.HandleFunc("GET /todos", handler.ListTodos)
+    mux.HandleFunc("POST /todo", handler.CreateTodo)
+    mux.HandleFunc("GET /todo/list", handler.ListTodo)
     // ...
     
     http.ListenAndServe(":8080", mux)
@@ -338,7 +352,7 @@ func main() {
 ```go
 func TestCreateTodoHandler(t *testing.T) {
     body := strings.NewReader(`{"title": "Buy milk"}`)
-    req, _ := http.NewRequest("POST", "/todos", body)
+    req, _ := http.NewRequest("POST", "/todo", body)
     w := httptest.NewRecorder()
     
     handler.CreateTodo(w, req)
@@ -374,7 +388,7 @@ curl コマンドで実際に動作確認：
 go run cmd/main.go
 
 # TODO 作成
-curl -X POST http://localhost:8080/todos \
+curl -X POST http://localhost:8080/todo \
   -H "Content-Type: application/json" \
   -d '{"title": "Buy milk"}'
 ```

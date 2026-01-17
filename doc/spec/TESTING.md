@@ -109,11 +109,11 @@ func TestValidateTodoTitle(t *testing.T) {
 ```go
 // モックリポジトリ
 type MockTodoRepository struct {
-    todos []*Todo
+    todoList []*Todo
 }
 
 func (m *MockTodoRepository) FindByID(ctx context.Context, id int) (*Todo, error) {
-    for _, t := range m.todos {
+    for _, t := range m.todoList {
         if t.ID == id {
             return t, nil
         }
@@ -124,7 +124,7 @@ func (m *MockTodoRepository) FindByID(ctx context.Context, id int) (*Todo, error
 // テストで使用
 func TestFindByID(t *testing.T) {
     mock := &MockTodoRepository{
-        todos: []*Todo{
+        todoList: []*Todo{
             {ID: 1, Title: "Test"},
         },
     }
@@ -158,7 +158,7 @@ func TestCreateTodo(t *testing.T) {
     
     // リクエストの作成
     body := strings.NewReader(`{"title": "Buy milk"}`)
-    req, _ := http.NewRequest("POST", "/todos", body)
+    req, _ := http.NewRequest("POST", "/todo", body)
     req.Header.Set("Content-Type", "application/json")
     
     // レスポンスの記録
@@ -187,7 +187,7 @@ import (
 
 func TestFileStoragePersistence(t *testing.T) {
     // 一時ファイルの作成
-    tmpfile, err := tempfile.CreateTemp("", "todos")
+    tmpfile, err := tempfile.CreateTemp("", "todo")
     if err != nil {
         t.Fatalf("Failed to create temp file: %v", err)
     }
@@ -201,9 +201,9 @@ func TestFileStoragePersistence(t *testing.T) {
     }
     
     // 読み込みで検証
-    todos, _ := storage.List(context.Background())
-    if len(todos) != 1 {
-        t.Errorf("Expected 1 todo, got %d", len(todos))
+    todoList, _ := storage.List(context.Background())
+    if len(todoList) != 1 {
+        t.Errorf("Expected 1 todo, got %d", len(todoList))
     }
 }
 ```
@@ -249,7 +249,7 @@ go test -run TestValidateTodoTitle ./...
 ### TODO 作成
 
 ```bash
-curl -X POST http://localhost:8080/todos \
+curl -X POST http://localhost:8080/todo \
   -H "Content-Type: application/json" \
   -d '{"title": "Buy milk"}'
 ```
@@ -257,13 +257,13 @@ curl -X POST http://localhost:8080/todos \
 ### TODO 一覧
 
 ```bash
-curl http://localhost:8080/todos
+curl http://localhost:8080/todo/list
 ```
 
 ### TODO 更新
 
 ```bash
-curl -X PUT http://localhost:8080/todos/1 \
+curl -X PUT http://localhost:8080/todo/1 \
   -H "Content-Type: application/json" \
   -d '{"title": "Buy milk", "completed": true}'
 ```
@@ -271,7 +271,7 @@ curl -X PUT http://localhost:8080/todos/1 \
 ### TODO 削除
 
 ```bash
-curl -X DELETE http://localhost:8080/todos/1
+curl -X DELETE http://localhost:8080/todo/1
 ```
 
 ## ベストプラクティス

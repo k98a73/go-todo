@@ -62,8 +62,8 @@ type Todo struct {
 - **説明**: 可変長配列
 - **使用例**: `[]Todo` （TODOのスライス）
   ```go
-  var todos []Todo
-  todos = append(todos, newTodo)  // 追加
+  var todoList []Todo
+  todoList = append(todoList, newTodo)  // 追加
   ```
 
 ## JSON表現

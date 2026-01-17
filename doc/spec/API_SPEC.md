@@ -4,12 +4,12 @@
 
 ### 全TODOを取得
 - **メソッド**: `GET`
-- **パス**: `/todo`
+- **パス**: `/todo/list`
 - **説明**: 保存されている全TODOを取得
 
 **リクエスト**:
 ```bash
-curl http://localhost:8080/todo
+curl http://localhost:8080/todo/list
 ```
 
 **レスポンス（成功時）**:

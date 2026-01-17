@@ -4,7 +4,7 @@
 
 ### ファイルパス
 ```
-./data/todos.json
+./data/todo.json
 ```
 
 ### ファイル形式
@@ -68,22 +68,22 @@ import (
 
 ```go
 // 1. ファイルを読み込む
-data, err := os.ReadFile("./data/todos.json")
+data, err := os.ReadFile("./data/todo.json")
 if err != nil {
     // ファイルが存在しない場合等
     return
 }
 
 // 2. JSON を Go struct にデコード
-var todos []models.Todo
-err = json.Unmarshal(data, &todos)
+var todoList []models.Todo
+err = json.Unmarshal(data, &todoList)
 if err != nil {
     // JSON形式が不正
     return
 }
 
 // 3. 使用
-for _, todo := range todos {
+for _, todo := range todoList {
     fmt.Println(todo.Title)
 }
 ```
@@ -91,7 +91,7 @@ for _, todo := range todos {
 ### ファイルが存在しない場合の処理
 
 ```go
-data, err := os.ReadFile("./data/todos.json")
+data, err := os.ReadFile("./data/todo.json")
 if err != nil {
     if os.IsNotExist(err) {
         // ファイルが存在しない場合
@@ -110,13 +110,13 @@ if err != nil {
 
 ```go
 // 1. Go struct を JSON にエンコード
-data, err := json.Marshal(todos)
+data, err := json.Marshal(todoList)
 if err != nil {
     return err
 }
 
 // 2. ファイルに書き込む
-err = os.WriteFile("./data/todos.json", data, 0644)
+err = os.WriteFile("./data/todo.json", data, 0644)
 if err != nil {
     return err
 }
@@ -134,7 +134,7 @@ if err != nil {
 }
 
 // ファイル書き込み
-os.WriteFile("./data/todos.json", data, 0644)
+os.WriteFile("./data/todo.json", data, 0644)
 ```
 
 ---
@@ -208,11 +208,11 @@ json.Unmarshal([]byte(json_str), &todo)
 ### 初回起動時の処理
 
 ```go
-// data/todos.json がない場合
-if _, err := os.Stat("./data/todos.json"); os.IsNotExist(err) {
+// data/todo.json がない場合
+if _, err := os.Stat("./data/todo.json"); os.IsNotExist(err) {
     // ファイルを作成
     os.MkdirAll("./data", 0755)
-    os.WriteFile("./data/todos.json", []byte("[]"), 0644)
+    os.WriteFile("./data/todo.json", []byte("[]"), 0644)
 }
 ```
 
@@ -223,7 +223,7 @@ if _, err := os.Stat("./data/todos.json"); os.IsNotExist(err) {
 ```go
 // テスト中は一時ファイルを使用
 func TestSaveTodo(t *testing.T) {
-    tmpFile := "/tmp/todos_test.json"
+    tmpFile := "/tmp/todo_test.json"
     repo := repository.NewTodoRepository(tmpFile)
     
     // テスト実行

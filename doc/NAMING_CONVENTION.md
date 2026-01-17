@@ -145,8 +145,8 @@ func CreateTodo(ctx context.Context, title string) (*Todo, error)
 
 例：
 ```go
-func ProcessTodos(todos []*Todo) error
-func FilterByStatus(items []*Todo, status string) []*Todo
+func ProcessTodo(todoList []*Todo) error
+func FilterByStatus(item []*Todo, status string) []*Todo
 ```
 
 ### Map・辞書
@@ -192,6 +192,6 @@ type Todo struct {
 例：
 ```
 /api/v1/todo/{id}
-/api/v1/todo
+/api/v1/todo/list
 /api/v1/user/{id}/todo
 ```

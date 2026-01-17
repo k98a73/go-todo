@@ -14,7 +14,7 @@ go-todo/
 │   │   └── repository.go    # リポジトリインターフェース
 │   ├── usecase/             # ユースケース層（ビジネスロジック）
 │   │   ├── create_todo.go   # TODO作成ロジック
-│   │   ├── list_todos.go    # TODO一覧取得ロジック
+│   │   ├── list_todo.go    # TODO一覧取得ロジック
 │   │   ├── update_todo.go   # TODO更新ロジック
 │   │   └── delete_todo.go   # TODO削除ロジック
 │   └── infra/               # インフラストラクチャ層（外部連携）
