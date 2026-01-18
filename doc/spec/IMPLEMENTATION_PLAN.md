@@ -2,20 +2,40 @@
 
 Go Todoアプリケーション開発の実装順序と各段階での学習ポイントをまとめます。
 
+**本計画はTest-Driven Development（TDD）を前提としています。**
+
+## TDD の鉄則
+
+```
+失敗するテストなしに本番コードを書かない
+```
+
+すべての機能実装は **Red-Green-Refactor** サイクルに従います：
+
+1. **RED** - 失敗するテストを書く
+2. **Verify RED** - テストが正しく失敗することを確認
+3. **GREEN** - テストを通す最小限のコードを書く
+4. **Verify GREEN** - すべてのテストが通ることを確認
+5. **REFACTOR** - コードを整理（テストは常にグリーンを維持）
+
+**参考資料:** [TDD スキル](../../.agents/skills/test-driven-development/SKILL.md)
+
+---
+
 ## 全体フロー
 
 ```
 段階1: 基礎準備
   ↓
-段階2: ドメイン層実装
+段階2: ドメイン層実装（TDD）
   ↓
-段階3: ユースケース層実装
+段階3: ユースケース層実装（TDD）
   ↓
-段階4: インフラストラクチャ層実装
+段階4: インフラストラクチャ層実装（TDD）
   ↓
-段階5: HTTP層実装
+段階5: HTTP層実装（TDD）
   ↓
-段階6: テスト・最適化
+段階6: 統合テスト・最適化
 ```
 
 ---
@@ -24,13 +44,13 @@ Go Todoアプリケーション開発の実装順序と各段階での学習ポ�
 
 ### 1.1 開発環境セットアップ
 
-**実施内容:**
-- Go のインストール
-- リポジトリの作成
-- リポジトリのクローン
-- プロジェクトディレクトリ初期化
-- `go.mod` ファイル生成
-- mainブランチの作成
+**TODO:**
+- [ ] Go のインストール
+- [ ] リポジトリの作成
+- [ ] リポジトリのクローン
+- [ ] プロジェクトディレクトリ初期化
+- [ ] `go.mod` ファイル生成
+- [ ] mainブランチの作成
 
 **学習ポイント:**
 - Go のパッケージシステムの理解
@@ -39,14 +59,14 @@ Go Todoアプリケーション開発の実装順序と各段階での学習ポ�
 
 ### 1.2 Go 言語の基礎学習
 
-**学習内容:**
-- struct（構造体）
-- interface（インターフェース）
-- time.Time
-- context.Context
-- error インターフェース
-- defer
-- ポインタ
+**TODO:**
+- [ ] struct（構造体）を学習
+- [ ] interface（インターフェース）を学習
+- [ ] time.Time を学習
+- [ ] context.Context を学習
+- [ ] error インターフェースを学習
+- [ ] defer を学習
+- [ ] ポインタを学習
 
 **参考資料:** [GO_BASICS.md](./GO_BASICS.md)
 
@@ -55,16 +75,89 @@ Go Todoアプリケーション開発の実装順序と各段階での学習ポ�
 
 ---
 
-## 段階2: ドメイン層実装
+## 段階2: ドメイン層実装（TDD）
 
-### 2.1 TODO 構造体の定義
+### 2.1 バリデーション関数のテストと実装
 
-**実施内容:**
-- `internal/domain/entity.go` で `Todo` 構造体を定義
-- JSON マーシャリング対応
+#### 2.1.1 RED: 失敗するテストを書く
 
-**期待される実装:**
+**TODO:**
+- [ ] `internal/domain/entity_test.go` を作成
+- [ ] `ValidateTodo` 関数のテストを書く（関数はまだ存在しない）
+
+**テストを先に書く:**
 ```go
+package domain
+
+import (
+    "strings"
+    "testing"
+)
+
+func TestValidateTodo(t *testing.T) {
+    tests := []struct {
+        name    string
+        title   string
+        wantErr bool
+        errMsg  string
+    }{
+        {
+            name:    "valid title",
+            title:   "Buy milk",
+            wantErr: false,
+        },
+        {
+            name:    "empty title",
+            title:   "",
+            wantErr: true,
+            errMsg:  "title cannot be empty",
+        },
+        {
+            name:    "title too long",
+            title:   strings.Repeat("a", 256),
+            wantErr: true,
+            errMsg:  "title too long",
+        },
+    }
+
+    for _, tt := range tests {
+        t.Run(tt.name, func(t *testing.T) {
+            todo := &Todo{Title: tt.title}
+            err := ValidateTodo(todo)
+            if (err != nil) != tt.wantErr {
+                t.Errorf("ValidateTodo() error = %v, wantErr %v", err, tt.wantErr)
+            }
+            if tt.wantErr && err != nil && err.Error() != tt.errMsg {
+                t.Errorf("ValidateTodo() error = %v, want %v", err.Error(), tt.errMsg)
+            }
+        })
+    }
+}
+```
+
+#### 2.1.2 Verify RED: テストが失敗することを確認
+
+```bash
+go test ./internal/domain -v
+# コンパイルエラー: Todo, ValidateTodo が未定義
+```
+
+#### 2.1.3 GREEN: テストを通す最小限のコードを書く
+
+**TODO:**
+- [ ] `internal/domain/entity.go` を作成
+- [ ] `Todo` 構造体を定義
+- [ ] `ValidateTodo` 関数を実装
+
+**実装:**
+```go
+package domain
+
+import (
+    "errors"
+    "time"
+)
+
 type Todo struct {
     ID        int       `json:"id"`
     Title     string    `json:"title"`
@@ -72,21 +165,7 @@ type Todo struct {
     CreatedAt time.Time `json:"created_at"`
     UpdatedAt time.Time `json:"updated_at"`
 }
-```
 
-**学習ポイント:**
-- struct フィールド定義
-- struct タグ（JSON マーシャリング）
-- time.Time の使用
-
-### 2.2 バリデーション関数の実装
-
-**実施内容:**
-- Title のバリデーション（空でない、最大長チェック）
-- 専用関数を `internal/domain/entity.go` に定義
-
-**期待される実装:**
-```go
 func ValidateTodo(t *Todo) error {
     if t.Title == "" {
         return errors.New("title cannot be empty")
@@ -98,15 +177,24 @@ func ValidateTodo(t *Todo) error {
 }
 ```
 
+#### 2.1.4 Verify GREEN: すべてのテストが通ることを確認
+
+```bash
+go test ./internal/domain -v
+# PASS
+```
+
 **学習ポイント:**
+- テーブル駆動テスト
 - エラー返却パターン
-- バリデーション設計
+- struct フィールド定義
+- struct タグ（JSON マーシャリング）
 
-### 2.3 リポジトリインターフェース定義
+### 2.2 リポジトリインターフェース定義
 
-**実施内容:**
-- `IRepository` インターフェース定義
-- 5つのメソッド（Create, List, FindByID, Update, Delete）
+**TODO:**
+- [ ] `IRepository` インターフェース定義
+- [ ] 5つのメソッド（Create, List, FindByID, Update, Delete）
 
 **期待される実装:**
 ```go
@@ -124,233 +212,333 @@ type IRepository interface {
 - context.Context の導入
 - メソッドシグネチャ設計
 
-### 2.4 ドメイン層テスト
-
-**実施内容:**
-- `internal/domain/entity_test.go` を作成
-- バリデーション関数のテスト実装
-
-**テストケース例:**
-- 正常な Title でテスト
-- 空の Title でテスト
-- 長すぎる Title でテスト
-
-**学習ポイント:**
-- ユニットテスト基本
-- テーブル駆動テスト
-- `testing.T` の使用方法
-
 ---
 
-## 段階3: ユースケース層実装
+## 段階3: ユースケース層実装（TDD）
 
 ### 3.1 Create ユースケース
 
-**実施内容:**
-- `internal/usecase/create_todo.go`
-- `CreateTodoUsecase` 構造体定義
-- リポジトリを DI（依存注入）で受け取る
+#### 3.1.1 RED: 失敗するテストを書く
 
-**期待される実装:**
+**TODO:**
+- [ ] `internal/usecase/create_todo_test.go` を作成
+- [ ] モックリポジトリを定義
+- [ ] `CreateTodoUsecase` のテストを書く
+
+**テストを先に書く:**
 ```go
+package usecase
+
+import (
+    "context"
+    "testing"
+
+    "github.com/k98a73/go-todo/internal/domain"
+)
+
+type MockRepository struct {
+    createCalled bool
+    createdTodo  *domain.Todo
+}
+
+func (m *MockRepository) Create(ctx context.Context, todo *domain.Todo) error {
+    m.createCalled = true
+    m.createdTodo = todo
+    todo.ID = 1  // ID を割り当てる
+    return nil
+}
+
+// 他のメソッドも空実装...
+
+func TestCreateTodoUsecase_Execute(t *testing.T) {
+    mock := &MockRepository{}
+    usecase := NewCreateTodoUsecase(mock)
+
+    todo, err := usecase.Execute(context.Background(), "Buy milk")
+
+    if err != nil {
+        t.Errorf("Expected no error, got %v", err)
+    }
+    if !mock.createCalled {
+        t.Error("Expected Create to be called")
+    }
+    if todo.Title != "Buy milk" {
+        t.Errorf("Expected title 'Buy milk', got '%s'", todo.Title)
+    }
+}
+
+func TestCreateTodoUsecase_Execute_EmptyTitle(t *testing.T) {
+    mock := &MockRepository{}
+    usecase := NewCreateTodoUsecase(mock)
+
+    _, err := usecase.Execute(context.Background(), "")
+
+    if err == nil {
+        t.Error("Expected error for empty title")
+    }
+}
+```
+
+#### 3.1.2 Verify RED: テストが失敗することを確認
+
+```bash
+go test ./internal/usecase -v
+# コンパイルエラー: NewCreateTodoUsecase が未定義
+```
+
+#### 3.1.3 GREEN: テストを通す最小限のコードを書く
+
+**TODO:**
+- [ ] `internal/usecase/create_todo.go` を作成
+- [ ] `CreateTodoUsecase` 構造体定義
+- [ ] `Execute` メソッド実装
+
+**実装:**
+```go
+package usecase
+
+import (
+    "context"
+    "time"
+
+    "github.com/k98a73/go-todo/internal/domain"
+)
+
 type CreateTodoUsecase struct {
     repo domain.IRepository
 }
 
-func (u *CreateTodoUsecase) Execute(ctx context.Context, title string) (*domain.Todo, error) {
-    // バリデーション
-    // リポジトリに保存
-    // 結果返却
+func NewCreateTodoUsecase(repo domain.IRepository) *CreateTodoUsecase {
+    return &CreateTodoUsecase{repo: repo}
 }
+
+func (u *CreateTodoUsecase) Execute(ctx context.Context, title string) (*domain.Todo, error) {
+    now := time.Now()
+    todo := &domain.Todo{
+        Title:     title,
+        Completed: false,
+        CreatedAt: now,
+        UpdatedAt: now,
+    }
+
+    if err := domain.ValidateTodo(todo); err != nil {
+        return nil, err
+    }
+
+    if err := u.repo.Create(ctx, todo); err != nil {
+        return nil, err
+    }
+
+    return todo, nil
+}
+```
+
+#### 3.1.4 Verify GREEN
+
+```bash
+go test ./internal/usecase -v
+# PASS
 ```
 
 **学習ポイント:**
 - 依存注入パターン
+- モックを使った単体テスト
 - ユースケースの責務
 
-### 3.2 List ユースケース
+### 3.2 List ユースケース（TDD）
 
-**実施内容:**
-- `internal/usecase/list_todo.go`
-- リポジトリから全 TODO を取得
+**同じサイクルを繰り返す:**
+1. RED: `list_todo_test.go` でテストを書く
+2. Verify RED: 失敗を確認
+3. GREEN: `list_todo.go` で実装
+4. Verify GREEN: 成功を確認
 
-**学習ポイント:**
-- スライスの扱い
-- インターフェース経由でのデータ取得
+### 3.3 FindByID ユースケース（TDD）
 
-### 3.3 FindByID ユースケース
+**同じサイクルを繰り返す**
 
-**実施内容:**
-- `internal/usecase/find_todo.go`
-- ID で単一 TODO を取得
+### 3.4 Update ユースケース（TDD）
 
-### 3.4 Update ユースケース
+**同じサイクルを繰り返す**
 
-**実施内容:**
-- `internal/usecase/update_todo.go`
-- 既存 TODO の更新
-- バリデーション後に保存
+### 3.5 Delete ユースケース（TDD）
 
-### 3.5 Delete ユースケース
-
-**実施内容:**
-- `internal/usecase/delete_todo.go`
-- ID で TODO を削除
-
-### 3.6 ユースケース層テスト
-
-**実施内容:**
-- 各ユースケースのテスト
-- **モックリポジトリ**を使用した単体テスト
-
-**テスト例:**
-```go
-type MockRepository struct { /* ... */ }
-
-func TestCreateTodoUsecase(t *testing.T) {
-    mock := &MockRepository{}
-    usecase := &CreateTodoUsecase{repo: mock}
-    
-    // テスト実行...
-}
-```
-
-**学習ポイント:**
-- モック実装
-- インターフェースの活用
+**同じサイクルを繰り返す**
 
 ---
 
-## 段階4: インフラストラクチャ層実装
+## 段階4: インフラストラクチャ層実装（TDD）
 
 ### 4.1 JSON ファイルストレージの実装
 
-**実施内容:**
-- `internal/infra/storage/file_storage.go`
-- `FileRepository` 構造体で `IRepository` を実装
+#### 4.1.1 RED: 失敗するテストを書く
 
-**実装する機能:**
-- JSON ファイル読み込み（`List`）
-- JSON ファイル書き込み（`Create`, `Update`, `Delete`）
-- ファイル I/O エラーハンドリング
+**TODO:**
+- [ ] `internal/infra/storage/file_storage_test.go` を作成
+- [ ] 一時ファイルを使用したテストを書く
 
-**期待されるファイル構造:**
-```json
-[
-  {
-    "id": 1,
-    "title": "Buy milk",
-    "completed": false,
-    "created_at": "2024-01-15T10:00:00Z",
-    "updated_at": "2024-01-15T10:00:00Z"
-  }
-]
+**テストを先に書く:**
+```go
+package storage
+
+import (
+    "context"
+    "os"
+    "testing"
+
+    "github.com/k98a73/go-todo/internal/domain"
+)
+
+func TestFileRepository_Create(t *testing.T) {
+    tmpfile, err := os.CreateTemp("", "todo*.json")
+    if err != nil {
+        t.Fatal(err)
+    }
+    defer os.Remove(tmpfile.Name())
+    tmpfile.Write([]byte("[]"))
+    tmpfile.Close()
+
+    repo := NewFileRepository(tmpfile.Name())
+    todo := &domain.Todo{Title: "Buy milk"}
+
+    err = repo.Create(context.Background(), todo)
+
+    if err != nil {
+        t.Errorf("Expected no error, got %v", err)
+    }
+    if todo.ID == 0 {
+        t.Error("Expected ID to be assigned")
+    }
+}
+
+func TestFileRepository_List(t *testing.T) {
+    tmpfile, err := os.CreateTemp("", "todo*.json")
+    if err != nil {
+        t.Fatal(err)
+    }
+    defer os.Remove(tmpfile.Name())
+    tmpfile.Write([]byte(`[{"id":1,"title":"Test","completed":false}]`))
+    tmpfile.Close()
+
+    repo := NewFileRepository(tmpfile.Name())
+
+    todos, err := repo.List(context.Background())
+
+    if err != nil {
+        t.Errorf("Expected no error, got %v", err)
+    }
+    if len(todos) != 1 {
+        t.Errorf("Expected 1 todo, got %d", len(todos))
+    }
+}
+```
+
+#### 4.1.2 Verify RED
+
+```bash
+go test ./internal/infra/storage -v
+# コンパイルエラー: NewFileRepository が未定義
+```
+
+#### 4.1.3 GREEN: 実装
+
+**TODO:**
+- [ ] `internal/infra/storage/file_storage.go` を作成
+- [ ] `FileRepository` 構造体で `IRepository` を実装
+
+#### 4.1.4 Verify GREEN
+
+```bash
+go test ./internal/infra/storage -v
+# PASS
 ```
 
 **学習ポイント:**
 - `os.ReadFile` / `os.WriteFile`
 - `json.Marshal` / `json.Unmarshal`
-- `defer` によるファイルクローズ
+- 一時ファイルを使ったテスト
 - エラーハンドリング
-
-### 4.2 インフラ層テスト
-
-**実施内容:**
-- 一時ファイルを使用した統合テスト
-- 実際のファイルI/O をテスト
-
-```go
-func TestFileRepositoryPersistence(t *testing.T) {
-    tmpfile, _ := ioutil.TempFile("", "todo")
-    defer os.Remove(tmpfile.Name())
-    
-    repo := NewFileRepository(tmpfile.Name())
-    // テスト...
-}
-```
-
-**学習ポイント:**
-- 統合テスト設計
-- 一時ファイル作成・削除
 
 ---
 
-## 段階5: HTTP 層実装
+## 段階5: HTTP 層実装（TDD）
 
 ### 5.1 HTTP ハンドラー実装
 
-**実施内容:**
-- `internal/infra/http/handler.go`
-- `TodoHandler` 構造体定義
-- 各メソッドでエンドポイント処理
+#### 5.1.1 RED: 失敗するテストを書く
 
-**エンドポイント:**
-- `POST /todo` → Create
-- `GET /todo/list` → List
-- `GET /todo/:id` → FindByID
-- `PUT /todo/:id` → Update
-- `DELETE /todo/:id` → Delete
+**TODO:**
+- [ ] `internal/infra/http/handler_test.go` を作成
+- [ ] `httptest` を使用したテストを書く
 
-**期待される実装:**
+**テストを先に書く:**
 ```go
-type TodoHandler struct {
-    usecase *usecase.CreateTodoUsecase
-}
+package http
 
-func (h *TodoHandler) CreateTodo(w http.ResponseWriter, r *http.Request) {
-    // JSON デコード
-    // ユースケース呼び出し
-    // JSON エンコード + レスポンス
-}
-```
+import (
+    "net/http"
+    "net/http/httptest"
+    "strings"
+    "testing"
+)
 
-**学習ポイント:**
-- `http.ResponseWriter` / `*http.Request`
-- JSON エンコード・デコード
-- HTTP ステータスコード
-
-### 5.2 ルーティング設定
-
-**実施内容:**
-- `cmd/main.go` でルーティング定義
-- `http.HandleFunc` または `http.ServeMux` 使用
-
-```go
-func main() {
-    mux := http.NewServeMux()
-    
-    handler := newTodoHandler()
-    mux.HandleFunc("POST /todo", handler.CreateTodo)
-    mux.HandleFunc("GET /todo/list", handler.ListTodo)
-    // ...
-    
-    http.ListenAndServe(":8080", mux)
-}
-```
-
-### 5.3 HTTP テスト
-
-**実施内容:**
-- `internal/infra/http/handler_test.go`
-- `httptest` を使用したエンドポイントテスト
-
-```go
 func TestCreateTodoHandler(t *testing.T) {
+    handler := NewTodoHandler(mockUsecase)
+
     body := strings.NewReader(`{"title": "Buy milk"}`)
     req, _ := http.NewRequest("POST", "/todo", body)
+    req.Header.Set("Content-Type", "application/json")
     w := httptest.NewRecorder()
-    
+
     handler.CreateTodo(w, req)
-    
+
     if w.Code != http.StatusCreated {
-        t.Errorf("Expected 201, got %d", w.Code)
+        t.Errorf("Expected status 201, got %d", w.Code)
+    }
+}
+
+func TestCreateTodoHandler_EmptyTitle(t *testing.T) {
+    handler := NewTodoHandler(mockUsecase)
+
+    body := strings.NewReader(`{"title": ""}`)
+    req, _ := http.NewRequest("POST", "/todo", body)
+    req.Header.Set("Content-Type", "application/json")
+    w := httptest.NewRecorder()
+
+    handler.CreateTodo(w, req)
+
+    if w.Code != http.StatusBadRequest {
+        t.Errorf("Expected status 400, got %d", w.Code)
     }
 }
 ```
 
+#### 5.1.2 Verify RED → GREEN → Verify GREEN
+
+**同じサイクルを繰り返す**
+
+### 5.2 ルーティング設定
+
+**TODO:**
+- [ ] `cmd/main.go` でルーティング定義
+- [ ] `http.ServeMux` 使用
+
+```go
+func main() {
+    mux := http.NewServeMux()
+
+    handler := newTodoHandler()
+    mux.HandleFunc("POST /todo", handler.CreateTodo)
+    mux.HandleFunc("GET /todo/list", handler.ListTodo)
+    // ...
+
+    http.ListenAndServe(":8080", mux)
+}
+```
+
 ---
 
-## 段階6: テスト・最適化
+## 段階6: 統合テスト・最適化
 
 ### 6.1-6.3 テスト実行・カバレッジ・手動テスト
 
@@ -360,33 +548,48 @@ func TestCreateTodoHandler(t *testing.T) {
 - カバレッジ測定: `go test -cover ./...`
 - API 動作確認: curl コマンドで実行
 
-### 6.4 エラーハンドリング改善
+### 6.4 エラーハンドリング改善（TDD）
 
-**実施内容:**
-- エラーレスポンス形式の統一
-- エラーコードの定義
-- ロギング機能の追加
+**TODO:**
+- [ ] エラーレスポンス形式のテストを書く
+- [ ] テストに基づいて実装
 
 **参考資料:** [ERROR_HANDLING.md](./ERROR_HANDLING.md)
 
 ### 6.5 パフォーマンス・セキュリティ対応
 
-- リクエストサイズ制限
-- CORS 設定
-- ログ出力の整備
+**TODO:**
+- [ ] リクエストサイズ制限のテストを書く
+- [ ] CORS 設定のテストを書く
+- [ ] ログ出力の整備
+
+---
+
+## TDD チェックリスト
+
+各機能実装時に確認：
+
+- [ ] 失敗するテストを先に書いた
+- [ ] テストが正しい理由で失敗することを確認した
+- [ ] テストを通す最小限のコードを書いた
+- [ ] すべてのテストが通ることを確認した
+- [ ] コードをリファクタリングした（テストはグリーンを維持）
+- [ ] エッジケースとエラーケースをカバーした
+
+**すべてにチェックが入らない場合、TDDをスキップしています。やり直してください。**
 
 ---
 
 ## 学習マイルストーン
 
-| 段階 | 達成内容 | 学習成果 |
-|------|--------|--------|
-| 1 | 環境構築、Go 基礎学習 | 言語の基本概念理解 |
-| 2 | domain 層完成 | struct, interface, 設計思想 |
-| 3 | usecase 層完成 | ビジネスロジック実装、DI パターン |
-| 4 | infra 層完成 | I/O 操作、JSON 処理、統合テスト |
-| 5 | HTTP 層完成 | Web API 実装、ルーティング |
-| 6 | 全テスト＆最適化 | テスト設計、エラーハンドリング |
+| 段階 | 達成内容              | 学習成果                           |
+| ---- | --------------------- | ---------------------------------- |
+| 1    | 環境構築、Go 基礎学習 | 言語の基本概念理解                 |
+| 2    | domain 層完成（TDD）  | struct, interface, テスト駆動開発  |
+| 3    | usecase 層完成（TDD） | ビジネスロジック、DI、モックテスト |
+| 4    | infra 層完成（TDD）   | I/O 操作、JSON 処理、統合テスト    |
+| 5    | HTTP 層完成（TDD）    | Web API 実装、httptest             |
+| 6    | 全テスト＆最適化      | カバレッジ測定、エラーハンドリング |
 
 ---
 
@@ -398,4 +601,4 @@ func TestCreateTodoHandler(t *testing.T) {
 - [ARCHITECTURE.md](./ARCHITECTURE.md) - 設計思想
 - [TESTING.md](./TESTING.md) - テスト戦略
 - [API_SPEC.md](./API_SPEC.md) - API 仕様
-
+- [TDD スキル](../../.agents/skills/test-driven-development/SKILL.md) - TDD ガイド
