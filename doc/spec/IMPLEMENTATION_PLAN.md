@@ -60,13 +60,13 @@ Go Todoアプリケーション開発の実装順序と各段階での学習ポ�
 ### 1.2 Go 言語の基礎学習
 
 **TODO:**
-- [ ] struct（構造体）を学習
-- [ ] interface（インターフェース）を学習
-- [ ] time.Time を学習
-- [ ] context.Context を学習
-- [ ] error インターフェースを学習
-- [ ] defer を学習
-- [ ] ポインタを学習
+- [x] struct（構造体）を学習
+- [x] interface（インターフェース）を学習
+- [x] time.Time を学習
+- [x] context.Context を学習
+- [x] error インターフェースを学習
+- [x] defer を学習
+- [x] ポインタを学習
 
 **参考資料:** [GO_BASICS.md](./GO_BASICS.md)
 
