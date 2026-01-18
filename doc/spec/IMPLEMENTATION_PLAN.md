@@ -18,7 +18,7 @@ Go Todoアプリケーション開発の実装順序と各段階での学習ポ�
 4. **Verify GREEN** - すべてのテストが通ることを確認
 5. **REFACTOR** - コードを整理（テストは常にグリーンを維持）
 
-**参考資料:** [TDD スキル](../../.agents/skills/test-driven-development/SKILL.md)
+**参考資料:** [TDD スキル](../../.agent/skills/test-driven-development/SKILL.md)
 
 ---
 
@@ -136,6 +136,9 @@ func TestValidateTodo(t *testing.T) {
 ```
 
 #### 2.1.2 Verify RED: テストが失敗することを確認
+
+**TODO:**
+- [ ] テストが失敗することを確認
 
 ```bash
 go test ./internal/domain -v
@@ -601,4 +604,4 @@ func main() {
 - [ARCHITECTURE.md](./ARCHITECTURE.md) - 設計思想
 - [TESTING.md](./TESTING.md) - テスト戦略
 - [API_SPEC.md](./API_SPEC.md) - API 仕様
-- [TDD スキル](../../.agents/skills/test-driven-development/SKILL.md) - TDD ガイド
+- [TDD スキル](../../.agent/skills/test-driven-development/SKILL.md) - TDD ガイド
