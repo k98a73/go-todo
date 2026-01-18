@@ -37,24 +37,6 @@ Go Todoアプリケーション開発の実装順序と各段階での学習ポ�
 - Module の基本
 - Jujutsu（jj）によるバージョン管理
 
-**実装コマンド:**
-```bash
-# リポジトリ作成（初回のみ）
-gh repo create k98a73/go-todo --public
-
-# リポジトリクローン
-ghq get https://github.com/k98a73/go-todo
-
-# リポジトリに移動
-cd $(ghq root)/github.com/k98a73/go-todo
-
-# Go プロジェクト初期化
-go mod init github.com/k98a73/go-todo
-
-# mainブランチの作成
-jj bookmark create main -r luotxono
-```
-
 ### 1.2 Go 言語の基礎学習
 
 **学習内容:**
@@ -67,6 +49,9 @@ jj bookmark create main -r luotxono
 - ポインタ
 
 **参考資料:** [GO_BASICS.md](./GO_BASICS.md)
+
+**実装コマンド:**
+詳細なコマンドリファレンスについては、[COMMANDS.md](./COMMANDS.md#初期セットアップコマンド) を参照してください。
 
 ---
 
@@ -367,31 +352,13 @@ func TestCreateTodoHandler(t *testing.T) {
 
 ## 段階6: テスト・最適化
 
-### 6.1 全体テスト実行
+### 6.1-6.3 テスト実行・カバレッジ・手動テスト
 
-```bash
-go test ./...
-```
+詳細なテストコマンドと API 動作確認は、[COMMANDS.md](./COMMANDS.md#テスト実行) を参照してください。
 
-### 6.2 カバレッジ測定
-
-```bash
-go test -cover ./...
-```
-
-### 6.3 手動テスト
-
-curl コマンドで実際に動作確認：
-
-```bash
-# サーバー起動
-go run cmd/main.go
-
-# TODO 作成
-curl -X POST http://localhost:8080/todo \
-  -H "Content-Type: application/json" \
-  -d '{"title": "Buy milk"}'
-```
+- テスト実行: `go test ./...`
+- カバレッジ測定: `go test -cover ./...`
+- API 動作確認: curl コマンドで実行
 
 ### 6.4 エラーハンドリング改善
 
@@ -425,6 +392,7 @@ curl -X POST http://localhost:8080/todo \
 
 ## 参考資料
 
+- [COMMANDS.md](./COMMANDS.md) - コマンドリファレンス
 - [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md) - ファイル構成
 - [GO_BASICS.md](./GO_BASICS.md) - 言語の基礎
 - [ARCHITECTURE.md](./ARCHITECTURE.md) - 設計思想
