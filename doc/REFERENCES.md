@@ -1,0 +1,85 @@
+# 参考資料・ドキュメント一覧
+
+## エージェント・コミュニケーション
+
+| ドキュメント | パス | 説明 |
+|------------|------|------|
+| エージェント動作ルール | [`doc/AGENT_BEHAVIOR.md`](AGENT_BEHAVIOR.md) | 日本語、質問必須、学習スタイルなどエージェント動作の詳細 |
+| 開発ワークフロー | [`doc/DEVELOPMENT_WORKFLOW.md`](DEVELOPMENT_WORKFLOW.md) | TDD、設計思想、参考スキル一覧 |
+
+## コード規約・ネーミング
+
+| ドキュメント | パス | 説明 |
+|------------|------|------|
+| ネーミング規則 | [`doc/NAMING_CONVENTION.md`](NAMING_CONVENTION.md) | 変数名、関数名、構造体、パッケージ名などの詳細なルール |
+
+## システム設計
+
+| ドキュメント | パス | 説明 |
+|------------|------|------|
+| アーキテクチャ | [`doc/spec/ARCHITECTURE.md`](spec/ARCHITECTURE.md) | システムアーキテクチャ設計（TDD/DDD/Clean Architecture） |
+| データモデル | [`doc/spec/DATA_MODEL.md`](spec/DATA_MODEL.md) | データモデル定義 |
+| プロジェクト構成 | [`doc/spec/PROJECT_STRUCTURE.md`](spec/PROJECT_STRUCTURE.md) | ディレクトリ構成とパッケージ設計 |
+| ストレージ | [`doc/spec/STORAGE.md`](spec/STORAGE.md) | ストレージ仕様とデータベース設定 |
+
+## API・通信・エラー処理
+
+| ドキュメント | パス | 説明 |
+|------------|------|------|
+| API仕様 | [`doc/spec/API_SPEC.md`](spec/API_SPEC.md) | REST API仕様書 |
+| エラーハンドリング | [`doc/spec/ERROR_HANDLING.md`](spec/ERROR_HANDLING.md) | エラーハンドリング規則 |
+
+## 学習・テスト・セットアップ
+
+| ドキュメント | パス | 説明 |
+|------------|------|------|
+| Go言語基礎 | [`doc/spec/GO_BASICS.md`](spec/GO_BASICS.md) | Go言語の基礎概念と学習資料 |
+| 実装計画 | [`doc/spec/IMPLEMENTATION_PLAN.md`](spec/IMPLEMENTATION_PLAN.md) | 機能実装の段階的計画 |
+| テスト戦略 | [`doc/spec/TESTING.md`](spec/TESTING.md) | テスト方針とテストコード例 |
+| セットアップ | [`doc/spec/SET_UP.md`](spec/SET_UP.md) | 開発環境セットアップガイド |
+
+## コマンド・ツール
+
+| ドキュメント | パス | 説明 |
+|------------|------|------|
+| コマンドリファレンス | [`doc/spec/COMMANDS.md`](spec/COMMANDS.md) | よく使うGOコマンド、テスト実行など |
+
+---
+
+## エージェントスキル
+
+Amp で使用可能なスキル：
+
+| スキル名 | 説明 | 使用タイミング |
+|---------|------|---------------|
+| `test-driven-development` | TDD実装ガイド。Red-Green-Refactorサイクルと実装ベストプラクティス | 機能実装・バグ修正時 |
+| `effective-go` | Go言語の公式ベストプラクティス。コード組織、命名規則、エラーハンドリング、並行処理 | Go コード作成・レビュー時 |
+| `jujutsu` | Jujutsu (jj) バージョン管理ガイド。コミット管理、ブランチ操作、リベースなど | バージョン管理操作時 |
+| `documentation-lookup` | ライブラリ・フレームワークのドキュメント取得。API リファレンス、設定例など | ライブラリ・フレームワーク調査時 |
+| `docs-researcher` | ライブラリドキュメント取得の軽量エージェント | 簡潔なドキュメント情報が必要な時 |
+
+---
+
+## ファイル構造
+
+```
+/
+├── AGENTS.md                        ← ルート設定（最小限）
+└── doc/
+    ├── REFERENCES.md                ← このファイル（ドキュメント一覧）
+    ├── AGENT_BEHAVIOR.md            ← エージェント動作ルール
+    ├── DEVELOPMENT_WORKFLOW.md      ← 開発ワークフロー
+    ├── NAMING_CONVENTION.md         ← ネーミング規則
+    └── spec/
+        ├── ARCHITECTURE.md          ← アーキテクチャ
+        ├── DATA_MODEL.md            ← データモデル
+        ├── PROJECT_STRUCTURE.md     ← プロジェクト構成
+        ├── STORAGE.md               ← ストレージ仕様
+        ├── API_SPEC.md              ← API仕様
+        ├── ERROR_HANDLING.md        ← エラーハンドリング
+        ├── GO_BASICS.md             ← Go言語基礎
+        ├── IMPLEMENTATION_PLAN.md   ← 実装計画
+        ├── TESTING.md               ← テスト戦略
+        ├── SET_UP.md                ← セットアップ
+        └── COMMANDS.md              ← コマンドリファレンス
+```
