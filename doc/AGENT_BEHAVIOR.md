@@ -41,6 +41,5 @@
 - `effective-go` - Go言語の公式ベストプラクティス
 - `jujutsu` - バージョン管理操作
 - `documentation-lookup` - ライブラリドキュメント取得
-- `docs-researcher` - ドキュメント軽量フェッチ
 
 適切なタイミングで活用する。
