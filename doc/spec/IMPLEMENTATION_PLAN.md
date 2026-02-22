@@ -224,9 +224,9 @@ type IRepository interface {
 #### 3.1.1 RED: 失敗するテストを書く
 
 **TODO:**
-- [ ] `internal/usecase/create_todo_test.go` を作成
-- [ ] モックリポジトリを定義
-- [ ] `CreateTodoUsecase` のテストを書く
+- [x] `internal/usecase/create_todo_test.go` を作成
+- [x] モックリポジトリを定義
+- [x] `CreateTodoUsecase` のテストを書く
 
 **テストを先に書く:**
 ```go
@@ -283,6 +283,9 @@ func TestCreateTodoUsecase_Execute_EmptyTitle(t *testing.T) {
 ```
 
 #### 3.1.2 Verify RED: テストが失敗することを確認
+
+**TODO:**
+- [x] テストが失敗することを確認
 
 ```bash
 go test ./internal/usecase -v
