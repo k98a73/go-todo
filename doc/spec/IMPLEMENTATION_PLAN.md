@@ -402,8 +402,8 @@ go test ./internal/usecase -v
 #### 4.1.1 RED: 失敗するテストを書く
 
 **TODO:**
-- [ ] `internal/infra/storage/file_storage_test.go` を作成
-- [ ] 一時ファイルを使用したテストを書く
+- [x] `internal/infra/storage/file_storage_test.go` を作成
+- [x] 一時ファイルを使用したテストを書く
 
 **テストを先に書く:**
 ```go
@@ -462,6 +462,9 @@ func TestFileRepository_List(t *testing.T) {
 ```
 
 #### 4.1.2 Verify RED
+
+**TODO:**
+- [x] テストが失敗することを確認
 
 ```bash
 go test ./internal/infra/storage -v
