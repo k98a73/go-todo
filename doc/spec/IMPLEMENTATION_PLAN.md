@@ -385,7 +385,13 @@ go test ./internal/usecase -v
 
 ### 3.5 Delete ユースケース（TDD）
 
-**同じサイクルを繰り返す**
+**TODO:**
+- [x] `MockRepository` に `deleteCalled`, `deletedID` フィールドを追加
+- [x] `MockRepository` の `Delete` メソッドを `todoList` から削除するように変更
+- [x] `internal/usecase/delete_todo_test.go` を作成（正常系・存在しないID）
+- [x] テストが失敗することを確認（Verify RED）
+- [x] `internal/usecase/delete_todo.go` を作成（`DeleteTodoUsecase`）
+- [x] テストが成功することを確認（Verify GREEN）
 
 ---
 
