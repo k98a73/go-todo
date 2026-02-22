@@ -196,8 +196,8 @@ go test ./internal/domain -v
 ### 2.2 リポジトリインターフェース定義
 
 **TODO:**
-- [ ] `IRepository` インターフェース定義
-- [ ] 5つのメソッド（Create, List, FindByID, Update, Delete）
+- [x] `IRepository` インターフェース定義
+- [x] 5つのメソッド（Create, List, FindByID, Update, Delete）
 
 **期待される実装:**
 ```go

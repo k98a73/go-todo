@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"context"
 	"errors"
 	"time"
 )
@@ -21,4 +22,12 @@ func ValidateTodo(t *Todo) error {
 		return errors.New("title too long")
 	}
 	return nil
+}
+
+type IRepository interface {
+	Create(ctx context.Context, todo *Todo) error
+	List(ctx context.Context) ([]*Todo, error)
+	FindByID(ctx context.Context, id int) (*Todo, error)
+	Update(ctx context.Context, todo *Todo) error
+	Delete(ctx context.Context, id int) error
 }
