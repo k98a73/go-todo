@@ -295,9 +295,9 @@ go test ./internal/usecase -v
 #### 3.1.3 GREEN: テストを通す最小限のコードを書く
 
 **TODO:**
-- [ ] `internal/usecase/create_todo.go` を作成
-- [ ] `CreateTodoUsecase` 構造体定義
-- [ ] `Execute` メソッド実装
+- [x] `internal/usecase/create_todo.go` を作成
+- [x] `CreateTodoUsecase` 構造体定義
+- [x] `Execute` メソッド実装
 
 **実装:**
 ```go
