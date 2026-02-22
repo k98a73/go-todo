@@ -375,7 +375,13 @@ go test ./internal/usecase -v
 
 ### 3.4 Update ユースケース（TDD）
 
-**同じサイクルを繰り返す**
+**TODO:**
+- [x] `MockRepository` に `updateCalled`, `updatedTodo` フィールドを追加
+- [x] `MockRepository` の `Update` メソッドを `todoList` を更新するように変更
+- [x] `internal/usecase/update_todo_test.go` を作成（正常系・空タイトル・存在しないID）
+- [x] テストが失敗することを確認（Verify RED）
+- [x] `internal/usecase/update_todo.go` を作成（`UpdateTodoUsecase`）
+- [x] テストが成功することを確認（Verify GREEN）
 
 ### 3.5 Delete ユースケース（TDD）
 

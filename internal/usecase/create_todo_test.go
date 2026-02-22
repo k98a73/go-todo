@@ -12,6 +12,8 @@ type MockRepository struct {
 	createCalled bool
 	createdTodo  *domain.Todo
 	todoList     []*domain.Todo
+	updateCalled bool
+	updatedTodo  *domain.Todo
 }
 
 func (m *MockRepository) Create(ctx context.Context, todo *domain.Todo) error {
@@ -35,7 +37,15 @@ func (m *MockRepository) FindByID(ctx context.Context, id int) (*domain.Todo, er
 }
 
 func (m *MockRepository) Update(ctx context.Context, todo *domain.Todo) error {
-	return nil
+	m.updateCalled = true
+	m.updatedTodo = todo
+	for i, t := range m.todoList {
+		if t.ID == todo.ID {
+			m.todoList[i] = todo
+			return nil
+		}
+	}
+	return errors.New("todo not found")
 }
 
 func (m *MockRepository) Delete(ctx context.Context, id int) error {
