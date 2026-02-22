@@ -341,6 +341,9 @@ func (u *CreateTodoUsecase) Execute(ctx context.Context, title string) (*domain.
 
 #### 3.1.4 Verify GREEN
 
+**TODO:**
+- [x] テストが成功することを確認
+
 ```bash
 go test ./internal/usecase -v
 # PASS
