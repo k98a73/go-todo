@@ -10,6 +10,7 @@ import (
 type MockRepository struct {
 	createCalled bool
 	createdTodo  *domain.Todo
+	todoList     []*domain.Todo
 }
 
 func (m *MockRepository) Create(ctx context.Context, todo *domain.Todo) error {
@@ -20,7 +21,7 @@ func (m *MockRepository) Create(ctx context.Context, todo *domain.Todo) error {
 }
 
 func (m *MockRepository) List(ctx context.Context) ([]*domain.Todo, error) {
-	return nil, nil
+	return m.todoList, nil
 }
 
 func (m *MockRepository) FindByID(ctx context.Context, id int) (*domain.Todo, error) {

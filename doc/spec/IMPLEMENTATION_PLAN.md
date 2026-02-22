@@ -356,11 +356,13 @@ go test ./internal/usecase -v
 
 ### 3.2 List ユースケース（TDD）
 
-**同じサイクルを繰り返す:**
-1. RED: `list_todo_test.go` でテストを書く
-2. Verify RED: 失敗を確認
-3. GREEN: `list_todo.go` で実装
-4. Verify GREEN: 成功を確認
+**TODO:**
+- [x] `MockRepository` に `todoList` フィールドを追加
+- [x] `List` メソッドが `todoList` を返すように変更
+- [x] `internal/usecase/list_todo_test.go` を作成（正常系・空リスト）
+- [x] テストが失敗することを確認（Verify RED）
+- [x] `internal/usecase/list_todo.go` を作成（`ListTodoUsecase`）
+- [x] テストが成功することを確認（Verify GREEN）
 
 ### 3.3 FindByID ユースケース（TDD）
 
