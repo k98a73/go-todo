@@ -366,7 +366,12 @@ go test ./internal/usecase -v
 
 ### 3.3 FindByID ユースケース（TDD）
 
-**同じサイクルを繰り返す**
+**TODO:**
+- [x] `MockRepository` の `FindByID` メソッドを `todoList` を検索するように変更
+- [x] `internal/usecase/find_by_id_todo_test.go` を作成（正常系・存在しないID）
+- [x] テストが失敗することを確認（Verify RED）
+- [x] `internal/usecase/find_by_id_todo.go` を作成（`FindByIDTodoUsecase`）
+- [x] テストが成功することを確認（Verify GREEN）
 
 ### 3.4 Update ユースケース（TDD）
 

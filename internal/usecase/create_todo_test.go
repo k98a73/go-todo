@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"errors"
 	"testing"
 
 	"github.com/k98a73/go-todo/internal/domain"
@@ -25,7 +26,12 @@ func (m *MockRepository) List(ctx context.Context) ([]*domain.Todo, error) {
 }
 
 func (m *MockRepository) FindByID(ctx context.Context, id int) (*domain.Todo, error) {
-	return nil, nil
+	for _, todo := range m.todoList {
+		if todo.ID == id {
+			return todo, nil
+		}
+	}
+	return nil, errors.New("todo not found")
 }
 
 func (m *MockRepository) Update(ctx context.Context, todo *domain.Todo) error {
