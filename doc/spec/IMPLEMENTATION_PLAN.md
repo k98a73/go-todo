@@ -474,10 +474,13 @@ go test ./internal/infra/storage -v
 #### 4.1.3 GREEN: 実装
 
 **TODO:**
-- [ ] `internal/infra/storage/file_storage.go` を作成
-- [ ] `FileRepository` 構造体で `IRepository` を実装
+- [x] `internal/infra/storage/file_storage.go` を作成
+- [x] `FileRepository` 構造体で `IRepository` を実装
 
 #### 4.1.4 Verify GREEN
+
+**TODO:**
+- [x] テストが成功することを確認
 
 ```bash
 go test ./internal/infra/storage -v
