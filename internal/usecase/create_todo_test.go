@@ -14,6 +14,8 @@ type MockRepository struct {
 	todoList     []*domain.Todo
 	updateCalled bool
 	updatedTodo  *domain.Todo
+	deleteCalled bool
+	deletedID    int
 }
 
 func (m *MockRepository) Create(ctx context.Context, todo *domain.Todo) error {
@@ -49,6 +51,8 @@ func (m *MockRepository) Update(ctx context.Context, todo *domain.Todo) error {
 }
 
 func (m *MockRepository) Delete(ctx context.Context, id int) error {
+	m.deleteCalled = true
+	m.deletedID = id
 	return nil
 }
 
