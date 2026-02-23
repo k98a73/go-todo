@@ -502,8 +502,11 @@ go test ./internal/infra/storage -v
 #### 5.1.1 RED: 失敗するテストを書く
 
 **TODO:**
-- [ ] `internal/infra/http/handler_test.go` を作成
-- [ ] `httptest` を使用したテストを書く
+- [x] `internal/infra/http/handler_test.go` を作成
+- [x] `httptest` を使用したテストを書く
+- [x] テストが失敗することを確認
+- [x] `internal/infra/http/handler.go` を作成・実装
+- [x] テストが成功することを確認
 
 **テストを先に書く:**
 ```go
