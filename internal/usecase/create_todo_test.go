@@ -16,11 +16,17 @@ type MockRepository struct {
 	updatedTodo  *domain.Todo
 	deleteCalled bool
 	deletedID    int
+	createErr    error
+	deleteErr    error
+	updateErr    error
 }
 
 func (m *MockRepository) Create(ctx context.Context, todo *domain.Todo) error {
 	m.createCalled = true
 	m.createdTodo = todo
+	if m.createErr != nil {
+		return m.createErr
+	}
 	todo.ID = 1
 	return nil
 }
@@ -41,6 +47,9 @@ func (m *MockRepository) FindByID(ctx context.Context, id int) (*domain.Todo, er
 func (m *MockRepository) Update(ctx context.Context, todo *domain.Todo) error {
 	m.updateCalled = true
 	m.updatedTodo = todo
+	if m.updateErr != nil {
+		return m.updateErr
+	}
 	for i, t := range m.todoList {
 		if t.ID == todo.ID {
 			m.todoList[i] = todo
@@ -53,6 +62,9 @@ func (m *MockRepository) Update(ctx context.Context, todo *domain.Todo) error {
 func (m *MockRepository) Delete(ctx context.Context, id int) error {
 	m.deleteCalled = true
 	m.deletedID = id
+	if m.deleteErr != nil {
+		return m.deleteErr
+	}
 	return nil
 }
 
@@ -82,5 +94,19 @@ func TestCreateTodoUsecase_Execute_EmptyTitle(t *testing.T) {
 
 	if err == nil {
 		t.Error("Expected error for empty title")
+	}
+}
+
+func TestCreateTodoUsecase_Execute_RepoError(t *testing.T) {
+	// Given: repo.Create がエラーを返すモック
+	// When:  Execute を呼び出す
+	// Then:  エラーが伝播する
+	mock := &MockRepository{createErr: errors.New("storage failure")}
+	usecase := NewCreateTodoUsecase(mock)
+
+	_, err := usecase.Execute(context.Background(), "Buy milk")
+
+	if err == nil {
+		t.Error("Expected error when repo.Create fails")
 	}
 }

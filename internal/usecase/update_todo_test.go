@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"errors"
 	"testing"
 	"time"
 
@@ -65,5 +66,25 @@ func TestUpdateTodoUsecase_Execute_NotFound(t *testing.T) {
 
 	if err == nil {
 		t.Error("Expected error for non-existent todo")
+	}
+}
+
+func TestUpdateTodoUsecase_Execute_RepoUpdateError(t *testing.T) {
+	// Given: repo.Update がエラーを返すモック
+	// When:  Execute を呼び出す
+	// Then:  エラーが伝播する
+	now := time.Now()
+	mock := &MockRepository{
+		todoList: []*domain.Todo{
+			{ID: 1, Title: "Buy milk", Completed: false, CreatedAt: now, UpdatedAt: now},
+		},
+		updateErr: errors.New("storage failure"),
+	}
+	usecase := NewUpdateTodoUsecase(mock)
+
+	_, err := usecase.Execute(context.Background(), 1, "Updated", true)
+
+	if err == nil {
+		t.Error("Expected error when repo.Update fails")
 	}
 }
