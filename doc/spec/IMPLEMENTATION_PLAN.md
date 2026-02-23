@@ -557,8 +557,8 @@ func TestCreateTodoHandler_EmptyTitle(t *testing.T) {
 ### 5.2 ルーティング設定
 
 **TODO:**
-- [ ] `cmd/main.go` でルーティング定義
-- [ ] `http.ServeMux` 使用
+- [x] `cmd/main.go` でルーティング定義
+- [x] `http.ServeMux` 使用
 
 ```go
 func main() {
