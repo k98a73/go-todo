@@ -13,13 +13,11 @@ type CreateTodoUsecase interface {
 }
 
 type TodoHandler struct {
-	createTodoUsecase CreateTodoUsecase
+	createUsecase CreateTodoUsecase
 }
 
-func NewTodoHandler(createUsecase CreateTodoUsecase) *TodoHandler {
-	return &TodoHandler{
-		createTodoUsecase: createUsecase,
-	}
+func NewTodoHandler(u CreateTodoUsecase) *TodoHandler {
+	return &TodoHandler{createUsecase: u}
 }
 
 type CreateTodoRequest struct {
@@ -27,24 +25,20 @@ type CreateTodoRequest struct {
 }
 
 func (h *TodoHandler) CreateTodo(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
 	var req CreateTodoRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, "Bad request", http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	todo, err := h.createTodoUsecase.Execute(r.Context(), req.Title)
+	if req.Title == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	todo, err := h.createUsecase.Execute(r.Context(), req.Title)
 	if err != nil {
-		if err.Error() == "title cannot be empty" || err.Error() == "title too long" {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 

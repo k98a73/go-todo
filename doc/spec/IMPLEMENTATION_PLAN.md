@@ -504,9 +504,6 @@ go test ./internal/infra/storage -v
 **TODO:**
 - [x] `internal/infra/http/handler_test.go` を作成
 - [x] `httptest` を使用したテストを書く
-- [x] テストが失敗することを確認
-- [x] `internal/infra/http/handler.go` を作成・実装
-- [x] テストが成功することを確認
 
 **テストを先に書く:**
 ```go
@@ -552,7 +549,10 @@ func TestCreateTodoHandler_EmptyTitle(t *testing.T) {
 
 #### 5.1.2 Verify RED → GREEN → Verify GREEN
 
-**同じサイクルを繰り返す**
+**TODO:**
+- [x] テストが失敗することを確認
+- [x] 成功する最小限のコードを `internal/infra/http/handler.go` に実装
+- [x] テストが成功することを確認
 
 ### 5.2 ルーティング設定
 
